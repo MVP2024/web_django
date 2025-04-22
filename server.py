@@ -65,7 +65,7 @@ def run_server():
                     content_length = int(headers.get('content-length', 0))
                     print(f"Ожидаемая длина тела POST-запроса: {content_length} байт")
 
-                    # Читаем оставшуюся часть тела, если она не была получена с заголовками
+                    # Читаем оставшееся, если она не была получена с заголовками
                     body_data = request_data[body_start_index:]
                     remaining_to_read = content_length - len(body_data)
 
@@ -110,7 +110,7 @@ def run_server():
 
                     # Формируем HTTP-ответ для HTML
                     status_line = "HTTP/1.1 200 OK\r\n"
-                    content_type = "Content-Type: text/html; charset=utf-8\r\n" # Указываем Content-Type как text/html
+                    content_type = "Content-Type: text/html; charset=utf-8\r\n"
                     content_length_header = f"Content-Length: {len(html_content.encode('utf-8'))}\r\n" # Длина содержимого в байтах
 
                     # Собираем полный ответ: статус, заголовки, пустая строка, содержимое
