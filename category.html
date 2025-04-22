@@ -1,0 +1,284 @@
+contacts.html<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Категория 1 - Прототип</title>
+    <!-- Подключение Bootstrap CSS из локальных файлов -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Опциональные стили для бокового меню, чтобы оно занимало всю высоту */
+        .sidebar {
+            height: 100vh; /* Высота на весь экран */
+            background-color: #343a40;
+            color: white;
+            padding-top: 1rem;
+            position: relative; /* Добавлено для правильного позиционирования .user-info */
+            display: flex; /* Используем flexbox для расположения элементов внутри сайдбара */
+            flex-direction: column; /* Элементы располагаются вертикально */
+        }
+
+
+        /* Стили для выпадающего меню пользователя */
+        .dropdown-menu-dark {
+            /* Переопределяем цвет фона для более светлого оттенка серого */
+            background-color: #495057 !important; /* Используйте !important для гарантированного переопределения */
+            border-color: #495057 !important; /* Также можно изменить цвет границы */
+        }
+
+
+        .sidebar .sidebar-header {
+            padding: 0 1rem 1rem 1rem; /* Отступы для заголовка */
+            border-bottom: 1px solid #495057; /* Разделитель под заголовком */
+            margin-bottom: 1rem; /* Отступ после заголовка */
+        }
+
+        .sidebar .nav {
+             flex-grow: 1; /* Меню занимает все доступное пространство */
+             padding: 0 1rem; /* Горизонтальные отступы для меню */
+        }
+
+
+        .sidebar .nav-link {
+            color: #adb5bd; /* Цвет ссылок */
+        }
+
+        .sidebar .nav-link.active {
+            color: #ffffff;
+            background-color: blue; /* Цвет основной ссылки */
+            border-radius: 0.25rem; /* Небольшое закругление */
+        }
+
+        .sidebar .user-info {
+            width: 100%; /* Убеждаемся, что занимает всю ширину */
+            padding: 1rem; /* Добавляем внутренние отступы */
+            border-top: 1px solid #495057; /* Разделитель теперь на верхнем краю этого блока */
+            color: #adb5bd;
+            margin-top: auto; /* Прижимает блок пользователя к низу во flex контейнере */
+        }
+
+        
+        .main-content {
+            padding: 2rem 2rem 2rem 4rem; /* Увеличен левый отступ (4rem) */
+            margin-top: 4rem; /* добавляем верхний отступ */
+        }
+
+        
+        /* Стили для ограничения ширины карточек в основном содержимом */
+        .main-content .card {
+            max-width: 300px; /* Максимальная ширина карточки */
+            margin-left: auto; /* Центрирование карточки в колонке */
+            margin-right: auto; /* Центрирование карточки в колонке */
+            margin-top: 6rem; /* Добавляем верхний отступ от заголовка */
+        }
+
+
+        .card {
+            margin-bottom: 0.5rem; /* Отступ между карточками */
+            background-color: #ffffff; /* Установим белый фон для карточек */
+            border: 1px solid #e0e0e0; /* Добавим светлую границу */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Добавим легкую тень */
+            border-radius: 0.5rem; /* Скруглим углы */
+            overflow: hidden; /* Скрываем все, что выходит за границы скругленных углов */
+        }
+
+        /* Убедимся, что изображение в карточке не выходит за границы */
+        .card-img-top {
+            width: 100%;
+            height: auto;
+            /* Скругление углов теперь управляется overflow: hidden; на .card */
+            /* border-top-left-radius: calc(0.5rem - 1px); */
+            /* border-top-right-radius: calc(0.5rem - 1px); */
+        }
+
+        /* Стиль для блока с заголовком товара */
+        .card-title-area {
+            border-bottom: 1px solid #e0e0e0; /* Разделительная линия */
+            padding: 0.5rem 1.25rem; /* Отступы как у card-header */
+            background-color: rgba(0,0,0,.03);
+        }
+
+         .card-title-area h5 {
+             margin-bottom: 0; /* Убираем нижний отступ у заголовка внутри блока */
+         }
+
+         .card-body {
+             padding-top: 1rem; /* Уменьшен верхний отступ */
+             padding-bottom: 1rem; /* Добавлен нижний отступ */
+             flex-grow: 1; /* Позволяем card-body занимать доступное пространство */
+             display: flex; /* Используем flexbox внутри card-body */
+             flex-direction: column; /* Элементы располагаются вертикально */
+             justify-content: space-between; /* Распределяем пространство между элементами */
+             align-items: center; /* Центрируем содержимое по горизонтали */
+         }
+
+         .card-body .card-text:last-child {
+             margin-bottom: 1.5rem; /* Увеличим отступ перед кнопкой */
+         }
+
+         /* Стили для кнопки "Купить" */
+         .card-body .btn-outline-primary {
+             /* Bootstrap по умолчанию делает outline кнопку, но можем добавить свои корректировки */
+             border-color: blue; /* Цвет рамки */
+             color: blue; /* Цвет текста */
+             background-color: transparent; /* Прозрачный фон */
+             border-radius: 0.25rem; /* Скругление углов */
+         }
+
+         .card-body .btn-outline-primary:hover {
+             color: wheat; /* Цвет текста при наведении */
+             background-color: blue; /* Цвет фона при наведении */
+             border-color: blue; /* Цвет рамки при наведении */
+         }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Боковое меню -->
+        <div class="col-md-3 col-lg-2 sidebar">
+            <div class="sidebar-header d-flex align-items-center">
+                <img src="/static/img/V.png" alt="Логотип" class="me-2" style="height: 2em;">
+                <h5 class="text-white mb-0">Меню</h5>
+            </div>
+            <nav class="nav flex-column">
+                <a class="nav-link" href="#">
+                    <img src="/static/img/home.png" alt="Главная" class="me-2" style="height: 1.5em;">
+                    Главная
+                </a>
+                <a class="nav-link active" href="#">
+                    <img src="/static/img/categories.png" alt="Категории" class="me-2" style="height: 1.5em;">
+                    Категории
+                </a>
+                <a class="nav-link" href="#">
+                    <img src="/static/img/orders.png" alt="Заказы" class="me-2" style="height: 1.5em;">
+                    Заказы
+                </a>
+                <a class="nav-link" href="#">
+                    <img src="/static/img/contact.png" alt="Контакты" class="me-2" style="height: 1.5em;">
+                    Контакты
+                </a>
+            </nav>
+            <div class="user-info">
+                <!-- Блок пользователя с аватаркой и выпадающим меню -->
+                <div class="dropdown dropup">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/static/img/avatar.png" alt="Аватар пользователя" class="rounded-circle me-2" style="height: 2em; width: 2em; object-fit: cover;">
+                        Пользователь
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="#">Профиль</a></li>
+                        <li><a class="dropdown-item" href="#">Выход</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основное содержимое -->
+        <div class="col-md-9 col-lg-10 main-content text-center">
+            <h1 class="text-center">Категория 1</h1>
+
+            <div class="row mt-4">
+
+                <!-- Карточка товара 1 -->
+                <div class="col-sm-6 col-md-4 col-lg-4">
+                    <div class="card">
+                        <img src="https://placehold.co/300x200/e9ecef/000?text=Товар+1" class="card-img-top" alt="Товар 1">
+                        <div class="card-title-area text-center">
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="card-text fs-4">$100</p>
+                            <p class="card-text text-muted"><small>Включает 10 пользователей, 2 ГБ хранилища,
+                                Поддержка по электронной почте, Доступ к справочному центру</small></p>
+                            <a href="#" class="btn btn-outline-primary w-100">Купить</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка товара 2 -->
+                <div class="col-sm-6 col-md-4 col-lg-4">
+                    <div class="card">
+                        <img src="https://placehold.co/300x200/e9ecef/000?text=Товар+1" class="card-img-top" alt="Товар 1">
+                        <div class="card-title-area text-center">
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="card-text fs-4">$100</p>
+                            <p class="card-text text-muted"><small>Включает 10 пользователей, 2 ГБ хранилища,
+                                Поддержка по электронной почте, Доступ к справочному центру</small></p>
+                            <a href="#" class="btn btn-outline-primary w-100">Купить</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка товара 3 -->
+                <div class="col-sm-6 col-md-4 col-lg-4">
+                    <div class="card">
+                        <img src="https://placehold.co/300x200/e9ecef/000?text=Товар+1" class="card-img-top" alt="Товар 1">
+                        <div class="card-title-area text-center">
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="card-text fs-4">$100</p>
+                            <p class="card-text text-muted"><small>Включает 10 пользователей, 2 ГБ хранилища,
+                                Поддержка по электронной почте, Доступ к справочному центру</small></p>
+                            <a href="#" class="btn btn-outline-primary w-100">Купить</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка товара 4 -->
+                <div class="col-sm-6 col-md-4 col-lg-4">
+                    <div class="card">
+                        <img src="https://placehold.co/300x200/e9ecef/000?text=Товар+1" class="card-img-top" alt="Товар 1">
+                        <div class="card-title-area text-center">
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="card-text fs-4">$100</p>
+                            <p class="card-text text-muted"><small>Включает 10 пользователей, 2 ГБ хранилища,
+                                Поддержка по электронной почте, Доступ к справочному центру</small></p>
+                            <a href="#" class="btn btn-outline-primary w-100">Купить</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка товара 5 -->
+                <div class="col-sm-6 col-md-4 col-lg-4">
+                    <div class="card">
+                        <img src="https://placehold.co/300x200/e9ecef/000?text=Товар+1" class="card-img-top" alt="Товар 1">
+                        <div class="card-title-area text-center">
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="card-text fs-4">$100</p>
+                            <p class="card-text text-muted"><small>Включает 10 пользователей, 2 ГБ хранилища,
+                                Поддержка по электронной почте, Доступ к справочному центру</small></p>
+                            <a href="#" class="btn btn-outline-primary w-100">Купить</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка товара 6 -->
+                <div class="col-sm-6 col-md-4 col-lg-4">
+                    <div class="card">
+                        <img src="https://placehold.co/300x200/e9ecef/000?text=Товар+1" class="card-img-top" alt="Товар 1">
+                        <div class="card-title-area text-center">
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="card-text fs-4">$100</p>
+                            <p class="card-text text-muted"><small>Включает 10 пользователей, 2 ГБ хранилища,
+                                Поддержка по электронной почте, Доступ к справочному центру</small></p>
+                            <a href="#" class="btn btn-outline-primary w-100">Купить</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Подключение Bootstrap JS из локальных файлов -->
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
