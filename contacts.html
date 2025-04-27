@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Контакты - Прототип</title>
-    <!-- Подключение Bootstrap CSS из локальных файлов -->
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <title>Контакты</title>
+    <!-- Подключение Bootstrap CSS с CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Подключение Material Symbols с CDN -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         /* Опциональные стили для бокового меню, чтобы оно занимало всю высоту */
         .sidebar {
@@ -41,12 +43,19 @@
 
         .sidebar .nav-link {
             color: #adb5bd; /* Цвет ссылок */
+            display: flex; /* Используем flexbox для выравнивания иконки и текста */
+            align-items: center; /* Выравниваем элементы по центру вертикали */
         }
 
         .sidebar .nav-link.active {
             color: #ffffff;
             background-color: #0d6efd; /* Цвет основной ссылки */
             border-radius: 0.25rem; /* Небольшое закругление */
+        }
+
+        /* Стили для иконок Material Symbols в меню */
+        .sidebar .nav-link .material-symbols-outlined {
+            font-size: 1.5em; /* Размер иконки */
         }
 
         .sidebar .user-info {
@@ -57,6 +66,7 @@
             margin-top: auto; /* Прижимает блок пользователя к низу во flex контейнере */
         }
 
+
         /* Стили для основного содержимого */
         .main-content {
             padding: 1.5rem; /* Внутренние отступы */
@@ -64,6 +74,7 @@
             /* background-color: #ffffff; /* Фон основного контента */
             /* Удалены стили центрирования и max-width отсюда */
         }
+
 
         /* Новый стиль для центрирования содержимого контактов */
         .contact-content-wrapper {
@@ -96,25 +107,30 @@
     <div class="row">
         <!-- Боковое меню -->
         <div class="col-md-3 col-lg-2 sidebar">
+            <!-- Заголовок бокового меню с логотипом и ссылкой -->
             <div class="sidebar-header d-flex align-items-center">
-                <img src="/static/img/V.png" alt="Логотип" class="me-2" style="height: 2em;">
-                <h5 class="text-white mb-0">Меню</h5>
+                <!-- Оборачиваем логотип и текст в ссылку -->
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none">
+                    <!-- Логотип теперь загружается по URL -->
+                    <img src="https://i.pinimg.com/736x/18/46/a7/1846a70b1eb7448ca07c29e45584519f.jpg" alt="Логотип" class="me-2" style="height: 2em;">
+                    <h5 class="mb-0">Меню</h5>
+                </a>
             </div>
             <nav class="nav flex-column">
                 <a class="nav-link" href="#">
-                    <img src="/static/img/home.png" alt="Главная" class="me-2" style="height: 1.5em;">
+                    <span class="material-symbols-outlined me-2">home</span>
                     Главная
                 </a>
                 <a class="nav-link" href="#">
-                    <img src="/static/img/categories.png" alt="Категории" class="me-2" style="height: 1.5em;">
+                     <span class="material-symbols-outlined me-2">category</span>
                     Категории
                 </a>
                 <a class="nav-link" href="#">
-                    <img src="/static/img/orders.png" alt="Заказы" class="me-2" style="height: 1.5em;">
+                    <span class="material-symbols-outlined me-2">list_alt</span>
                     Заказы
                 </a>
                 <a class="nav-link active" href="#">
-                    <img src="/static/img/contact.png" alt="Контакты" class="me-2" style="height: 1.5em;">
+                    <span class="material-symbols-outlined me-2">contact_mail</span>
                     Контакты
                 </a>
             </nav>
@@ -122,7 +138,8 @@
                 <!-- Блок пользователя с аватаркой и выпадающим меню -->
                 <div class="dropdown dropup">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="/static/img/avatar.png" alt="Аватар пользователя" class="rounded-circle me-2" style="height: 2em; width: 2em; object-fit: cover;">
+                        <!-- Аватар пользователя теперь загружается по URL -->
+                        <img src="https://static.kinoafisha.info/k/movie_shots/1920x1080/upload/movie_shots/5/1/7/8125715/30a519abee1808f12a06c21.jpg" alt="Аватар пользователя" class="rounded-circle me-2" style="height: 2em; width: 2em; object-fit: cover;">
                         Пользователь
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
@@ -136,7 +153,7 @@
         <!-- Основное содержимое -->
         <div class="col-md-9 col-lg-10 main-content">
             <h1 class="text-center mb-4">Контакты</h1>
-            
+
             <div class="contact-content-wrapper">
                 <div class="row">
                     <!-- Форма контактов (левая колонка) -->
@@ -187,7 +204,7 @@
     </div>
 </div>
 
-<!-- Подключение Bootstrap JS из локальных файлов -->
-<script src="/static/js/bootstrap.bundle.min.js"></script>
+<!-- Подключение Bootstrap JS с CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>
