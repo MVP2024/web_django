@@ -111,7 +111,7 @@ def run_server():
                     # Формируем HTTP-ответ для HTML
                     status_line = "HTTP/1.1 200 OK\r\n"
                     content_type = "Content-Type: text/html; charset=utf-8\r\n"
-                    content_length_header = f"Content-Length: {len(html_content.encode('utf-8'))}\r\n" # Длина содержимого в байтах
+                    content_length_header = f"Content-Length: {len(html_content.encode('utf-8'))}\r\n"
 
                     # Собираем полный ответ: статус, заголовки, пустая строка, содержимое
                     response = f"{status_line}{content_type}{content_length_header}\r\n{html_content}"
