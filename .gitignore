@@ -9,10 +9,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+/.env
 
 # Database
-db.sqlite3
-*.sqlite3
+
 
 # IDE - PyCharm
 .idea/
@@ -20,7 +20,7 @@ db.sqlite3
 # Django specific
 *.log
 local_settings.py  # If you use a separate file for local settings
-media/             # User-uploaded files (if you have a media directory)
+#media/             # User-uploaded files (if you have a media directory)
 static_cdn/        # Collected static files (if you use collectstatic)
 staticfiles/       # Collected static files (another common name)
 
