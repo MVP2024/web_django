@@ -4,10 +4,6 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 
-#  для отладки
-print(f"DEBUG: DATABASE_PASSWORD is '{os.getenv('DATABASE_PASSWORD')}'")
-
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -46,7 +42,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'catalog' / 'templates',],
+        'DIRS': [os.path.join(BASE_DIR, 'catalog', 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
