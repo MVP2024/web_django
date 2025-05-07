@@ -12,7 +12,8 @@ dependencies = [
     "django (>=5.2,<6.0)",
     "python-dotenv (>=1.1.0,<2.0.0)",
     "psycopg2-binary (>=2.9.10,<3.0.0)",
-    "ipython (>=9.2.0,<10.0.0)"
+    "ipython (>=9.2.0,<10.0.0)",
+    "pillow (>=11.2.1,<12.0.0)"
 ]
 
 [tool.poetry]
@@ -27,3 +28,21 @@ flake8 = "^7.0.0"
 mypy = "^1.10.0"
 black = "^24.4.2"
 isort = "^5.13.2"
+[tool.black]
+line-length = 120
+target-version = ["py313"]
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations # Добавляем исключение для директории migrations
+)/
+'''
+
