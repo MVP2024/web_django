@@ -56,11 +56,6 @@
     margin-top: auto; /* Прижимает блок пользователя к низу во flex контейнере */
 }
 
-.main-content {
-    padding: 1.5rem;
-    margin-top: 2rem; /* Уменьшаем верхний отступ, так как шапка теперь в сайдбаре */
-}
-
 
 .main-content {
     padding: 1.5rem;
