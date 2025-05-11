@@ -13,7 +13,7 @@
         <div class="col-sm-6 col-md-4 col-lg-3"> {# Используем колонки для адаптивности #}
             <div class="card category-card">
                 {# Здесь можно добавить изображение категории, если оно есть в модели Category #}
-                {# {% if category.image %}<img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">{% endif %} #}
+                {% if category.image %}<img src="{{ category.image.url }}" class="card-img-top category-img" alt="{{ category.name }}">{% endif %} {# Раскомментировано и добавлен класс category-img #}
                 <div class="card-body">
                     <h5 class="card-title">{{ category.name }}</h5> {# Название категории #}
                     <p class="card-text text-muted"><small>{{ category.description|truncatechars:100 }}</small></p> {# Описание категории, обрезанное до 100 символов #}

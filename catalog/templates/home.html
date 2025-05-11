@@ -17,6 +17,9 @@
                     <div class="card-header">
                         <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
                     </div>
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% endif %}
                     <div class="card-body">
                         <h1 class="card-title pricing-card-title">$ {{ product.price }}</h1>
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">

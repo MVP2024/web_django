@@ -5,6 +5,7 @@ from django.utils import timezone
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name="Наименование", unique=True)
     description = models.TextField(verbose_name="Описание", null=True, blank=True)
+    image = models.ImageField(upload_to="categories/%Y/%m/%d/", verbose_name="Изображение", null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} {self.description}"

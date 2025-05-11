@@ -82,7 +82,7 @@
 .main-content .card .card-img-top {
     width: 100%; /* Изображение занимает всю ширину карточки */
     height: 180px; /* Задаем фиксированную высоту (можно настроить) */
-    object-fit: cover; /* Обрезаем изображение, чтобы оно покрывало область, сохраняя пропорции */
+    object-fit: contain; /* Изменяем на 'contain', чтобы изображение полностью помещалось */
     /* Скругление верхних углов изображения, чтобы соответствовать карточке */
     border-top-left-radius: calc(0.25rem - 1px);
     border-top-right-radius: calc(0.25rem - 1px);
@@ -135,10 +135,9 @@
 }
 
 .product-detail-image {
-    height: auto;
-    object-fit: contain;
-    max-height: 400px;
-    width: auto;
+    width: 600px; /* Задаем фиксированную ширину */
+    height: 400px; /* Задаем фиксированную высоту */
+    object-fit: contain; /* Изображение полностью помещается, сохраняя пропорции */
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -148,3 +147,11 @@
     text-align: left;
 }
 
+/* Стили для изображений категорий */
+.category-img {
+    width: 100%; /* Изображение занимает всю ширину карточки */
+    height: 150px; /* Задаем фиксированную высоту (можно настроить) */
+    object-fit: cover; /* Обрезаем изображение, чтобы оно полностью заполняло контейнер */
+    border-top-left-radius: calc(0.5rem - 1px); /* Скругление верхних углов */
+    border-top-right-radius: calc(0.5rem - 1px); /* Скругление верхних углов */
+}
