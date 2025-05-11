@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Список категорий{% endblock %}
+
+{% block content %}
+
+
+<h1 class="text-center mb-4">Список категорий</h1>
+
+<div class="row">
+    {# Перебираем список категорий, переданных из представления #}
+    {% for category in categories %}
+        <div class="col-sm-6 col-md-4 col-lg-3"> {# Используем колонки для адаптивности #}
+            <div class="card category-card">
+                {# Здесь можно добавить изображение категории, если оно есть в модели Category #}
+                {# {% if category.image %}<img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">{% endif %} #}
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.name }}</h5> {# Название категории #}
+                    <p class="card-text text-muted"><small>{{ category.description|truncatechars:100 }}</small></p> {# Описание категории, обрезанное до 100 символов #}
+                    {# Ссылка на страницу товаров этой категории #}
+                    <a href="{% url 'catalog:product_list_by_category' category.pk %}" class="btn btn-outline-primary">Посмотреть товары</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
