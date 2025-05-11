@@ -1,0 +1,155 @@
+/* Опциональные стили для бокового меню, чтобы оно занимало всю высоту */
+.sidebar {
+    height: 100vh; /* Высота на весь экран */
+    background-color: #343a40;
+    color: white;
+    padding-top: 1rem;
+    position: relative; /* Добавлено для правильного позиционирования .user-info */
+    display: flex; /* Используем flexbox для расположения элементов внутри сайдбара */
+    flex-direction: column; /* Элементы располагаются вертикально */
+}
+
+
+/* Стили для выпадающего меню пользователя */
+.dropdown-menu-dark {
+    /* Переопределяем цвет фона для более светлого оттенка серого */
+    background-color: #495057 !important; /* Используйте !important для гарантированного переопределения */
+    border-color: #495057 !important; /* Также можно изменить цвет границы */
+}
+
+
+.sidebar .sidebar-header {
+    padding: 0 1rem 1rem 1rem; /* Отступы для заголовка */
+    border-bottom: 1px solid #495057; /* Разделитель под заголовком */
+    margin-bottom: 1rem; /* Отступ после заголовка */
+}
+
+.sidebar .nav {
+     flex-grow: 1; /* Меню занимает все доступное пространство */
+     padding: 0 1rem; /* Горизонтальные отступы для меню */
+}
+
+
+.sidebar .nav-link {
+    color: #adb5bd; /* Цвет ссылок */
+    display: flex; /* Используем flexbox для выравнивания иконки и текста */
+    align-items: center; /* Выравниваем элементы по центру вертикали */
+}
+
+.sidebar .nav-link.active {
+    color: #ffffff;
+    background-color: #0d6efd; /* Цвет основной ссылки */
+    border-radius: 0.25rem; /* Небольшое закругление */
+}
+
+/* Стили для иконок Material Symbols в меню */
+.sidebar .nav-link .material-symbols-outlined {
+    font-size: 1.5em; /* Размер иконки */
+}
+
+
+.sidebar .user-info {
+    width: 100%; /* Убеждаемся, что занимает всю ширину */
+    padding: 1rem; /* Добавляем внутренние отступы */
+    border-top: 1px solid #495057; /* Разделитель теперь на верхнем краю этого блока */
+    color: #adb5bd;
+    margin-top: auto; /* Прижимает блок пользователя к низу во flex контейнере */
+}
+
+.main-content {
+    padding: 1.5rem;
+    margin-top: 2rem; /* Уменьшаем верхний отступ, так как шапка теперь в сайдбаре */
+}
+
+
+.main-content {
+    padding: 1.5rem;
+    margin-top: 2rem; /* Уменьшаем верхний отступ, так как шапка теперь в сайдбаре */
+    display: flex; /* Делаем main-content flex-контейнером */
+    flex-direction: column; /* Располагаем его дочерние элементы вертикально */
+    flex-grow: 1; /* Позволяем main-content занимать все доступное пространство */
+}
+
+.main-content-wrapper { /* Новый стиль для обертки контента */
+    flex-grow: 1; /* Позволяем обертке контента занимать все доступное пространство, выталкивая футер вниз */
+}
+
+
+/* Стили для ограничения ширины карточек в основном содержимом и центрирования */
+.main-content .card {
+    max-width: 400px; /* Максимальная ширина карточки */
+    margin-left: auto; /* Центрирование карточки в колонке */
+    margin-right: auto; /* Центрирование карточки в колонке */
+    margin-top: 2rem; /* Уменьшаем отступ от заголовка */
+}
+
+/* Стиль для изображения внутри карточки в основном содержимом */
+.main-content .card .card-img-top {
+    width: 100%; /* Изображение занимает всю ширину карточки */
+    height: 180px; /* Задаем фиксированную высоту (можно настроить) */
+    object-fit: cover; /* Обрезаем изображение, чтобы оно покрывало область, сохраняя пропорции */
+    /* Скругление верхних углов изображения, чтобы соответствовать карточке */
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+}
+
+
+.card {
+    margin-bottom: 2rem; /* Отступ между карточками */
+}
+
+
+/* Стили для карточек категорий (перенесены из category_list.html) */
+.category-card {
+    margin-bottom: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.category-card .card-body {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.category-card .card-title {
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.category-card .card-text {
+    color: #666;
+}
+
+.category-card .btn {
+    margin-top: 1rem;
+}
+
+/* Стили, специфичные для карточки на странице деталей продукта (перенесены из product_detail.html) */
+.product-detail-card {
+    max-width: none;
+    width: 100%;
+}
+
+.product-detail-image {
+    height: auto;
+    object-fit: contain;
+    max-height: 400px;
+    width: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.product-detail-card .card-body {
+    text-align: left;
+}
+
