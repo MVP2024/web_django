@@ -95,7 +95,7 @@ def run_server():
                 else:  # Обрабатываем другие методы (например, GET)
                     # Читаем содержимое HTML файла
                     try:
-                        with open("contacts.html", "r", encoding="utf-8") as f:
+                        with open("old_html/contacts.html", "r", encoding="utf-8") as f:
                             html_content = f.read()
                     except FileNotFoundError:
                         # Если файл не найден, отправляем ошибку 404
