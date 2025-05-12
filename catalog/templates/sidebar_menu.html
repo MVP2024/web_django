@@ -1,0 +1,23 @@
+<nav class="nav flex-column">
+    <a class="nav-link" href="{% url 'catalog:home' %}"> {# Удалите active класс отсюда #}
+        <span class="material-symbols-outlined me-2">home</span>
+        Главная
+    </a>
+    <a class="nav-link" href="{% url 'catalog:category_list' %}">
+         <span class="material-symbols-outlined me-2">category</span>
+        Категории
+    </a>
+    <a class="nav-link" href="#">
+        <span class="material-symbols-outlined me-2">list_alt</span>
+        Заказы
+    </a>
+    <a class="nav-link" href="{% url 'catalog:contacts' %}">
+        <span class="material-symbols-outlined me-2">contact_mail</span>
+        Контакты
+    </a>
+    {# Новая ссылка для добавления товара #}
+    <a class="nav-link" href="{% url 'catalog:create_product' %}">
+        <span class="material-symbols-outlined me-2">add_circle</span> {# Можно использовать другую иконку #}
+        Добавить товар
+    </a>
+</nav>

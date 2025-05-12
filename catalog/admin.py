@@ -6,8 +6,15 @@ from .models import Category, ContactInfo, Product
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
+    list_display = ("id", "name", "image_display")
     search_fields = ("name",)
+
+    def image_display(self, obj):
+        if obj.image:
+            return mark_safe(f'<img src="{obj.image.url}" width="50" height="50" />')
+        return "-"
+
+    image_display.short_description = "Изображение категорий"
 
 
 @admin.register(Product)
