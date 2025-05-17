@@ -6,7 +6,6 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 
 from .models import Post
