@@ -10,6 +10,8 @@
         <div class="card mb-4 product-detail-card"> {# Добавлен класс product-detail-card #}
             {% if product.image %}
                 <img src="{{ product.image.url }}" class="card-img-top product-detail-image" alt="{{ product.name }}">
+            {% else %}
+                <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>
