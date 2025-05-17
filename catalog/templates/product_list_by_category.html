@@ -3,32 +3,39 @@
 {% block title %}Товары в категории "{{ category.name }}"{% endblock %}
 
 {% block content %}
-<h1 class="text-center mb-4">Товары в категории "{{ category.name }}"</h1>
+    <h1 class="text-center mb-4">Товары в категории "{{ category.name }}"</h1>
 
-<div class="row">
-    {% for product in products %}
-        <div class="col-sm-6 col-md-4 col-lg-3"> {# Используем колонки для адаптивности #}
-            <div class="card mb-4 box-shadow">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
-                    <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
-                    <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-outline-primary">Подробнее</a>
+    <div class="row mb-5">  {# Добавляем класс mb-5 для нижнего отступа #}
+        {% for product in products %}
+            <div class="col-sm-6 col-md-4 col-lg-3"> {# Используем колонки для адаптивности #}
+                <div class="card product-card mb-4 box-shadow"> {# Added product-card class and mb-4 #}
+                    <div class="product-img-container"> {# Added image container #}
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="product-img card-img-top"
+                                 alt="{{ product.name }}"> {# Added product-img class #}
+                        {% else %}
+                            <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
+                            {# Placeholder #}
+                        {% endif %}
+                    </div>
+                    {# Close image container #}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                        <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
+                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-outline-primary">Подробнее</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% empty %}
-        <div class="col-12 text-center">
-            <p>В этой категории пока нет товаров.</p>
-        </div>
-    {% endfor %}
-</div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p>В этой категории пока нет товаров.</p>
+            </div>
+        {% endfor %}
+    </div>
 
-<div class="text-center mt-4">
-    <a href="{% url 'catalog:category_list' %}" class="btn btn-secondary">Назад к категориям</a>
-</div>
+    <div class="text-center mt-2 back-button-container">  {# Можно уменьшить или оставить mt-4 #}
+        <a href="{% url 'catalog:category_list' %}" class="btn btn-secondary">Назад к категориям</a>
+    </div>
 
 {% endblock %}

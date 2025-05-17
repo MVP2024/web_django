@@ -41,7 +41,8 @@ def product_detail(request, pk):
     # Получаем продукт по pk или возвращаем ошибку 404
     product = get_object_or_404(Product, pk=pk)
     context = {
-    "product": product
+    "product": product,
+    "category_pk": product.category.pk  # Добавляем PK категории в контекст
     }
     return render(request, "product_detail.html", context)
 

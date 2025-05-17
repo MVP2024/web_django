@@ -18,7 +18,7 @@
                 <p class="card-text"><strong>Категория:</strong> {{ product.category.name }}</p>
                 <p class="card-text"><small class="text-muted">Создано: {{ product.created_at|date:"d.m.Y H:i" }}</small></p>
                 <p class="card-text"><small class="text-muted">Обновлено: {{ product.updated_at|date:"d.m.Y H:i" }}</small></p>
-                <a href="{% url 'catalog:home' %}" class="btn btn-outline-primary mt-3">Назад к каталогу</a>
+                <a href="{% url 'catalog:product_list_by_category' category_pk %}" class="btn btn-outline-primary mt-3">Назад к категории {{ product.category.name }}</a>
             </div>
         </div>
     </div>
