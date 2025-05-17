@@ -4,7 +4,7 @@
         Главная
     </a>
     <a class="nav-link" href="{% url 'catalog:category_list' %}">
-         <span class="material-symbols-outlined me-2">category</span>
+        <span class="material-symbols-outlined me-2">category</span>
         Категории
     </a>
     <a class="nav-link" href="#">
@@ -19,5 +19,10 @@
     <a class="nav-link" href="{% url 'catalog:create_product' %}">
         <span class="material-symbols-outlined me-2">add_circle</span> {# Можно использовать другую иконку #}
         Добавить товар
+    </a>
+    {# Ссылка на блог #}
+    <a class="nav-link" href="{% url 'blog:list' %}">
+        <span class="material-symbols-outlined me-2">article</span> {# Иконка для блога #}
+        Блог
     </a>
 </nav>

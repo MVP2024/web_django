@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Блог{% endblock %}
+
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Блог</h1>
+    <p class="lead">Последние публикации</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    {% if post.preview %}
+                        <img src="{{ post.preview.url }}" class="card-img-top" alt="{{ post.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.content|truncatechars:150 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="{% url 'blog:detail' post.slug %}" class="btn btn-sm btn-outline-secondary">Читать</a>
+                                <a href="{% url 'blog:update' post.slug %}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                                <a href="{% url 'blog:delete' post.slug %}" class="btn btn-sm btn-outline-secondary">Удалить</a>
+                            </div>
+                            <small class="text-muted">{{ post.created_at|date:"d.m.Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p>Пока нет опубликованных записей в блоге.</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'blog:create' %}" class="btn btn-primary">Добавить новую запись</a>
+    </div>
+</div>
+{% endblock %}

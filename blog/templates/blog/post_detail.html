@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">{{ post.title }}</h1>
+            {% if post.preview %}
+                <img src="{{ post.preview.url }}" class="img-fluid mb-4" alt="{{ post.title }}">
+            {% endif %}
+            <p>{{ post.content|linebreaksbr }}</p> {# Используем linebreaksbr для сохранения переносов строк #}
+            <p class="text-muted"><small>Опубликовано: {{ post.created_at|date:"d.m.Y H:i" }}</small></p>
+            <p class="text-muted"><small>Просмотров: {{ post.views_count }}</small></p>
+
+            <div class="mt-4">
+                <a href="{% url 'blog:list' %}" class="btn btn-secondary">Назад к списку</a>
+                <a href="{% url 'blog:update' post.slug %}" class="btn btn-primary">Редактировать</a>
+                <a href="{% url 'blog:delete' post.slug %}" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,80 +1,89 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.views.generic.edit import FormMixin
 
-from .forms import ProductForm
+from .forms import ProductForm, ContactForm
 from .models import Product, ContactInfo, Category
 
 
-def home(request):
-    # Выбираем последние 5 продуктов, сортируя по дате создания в обратном порядке
-    latest_products = Product.objects.order_by("-created_at")[:5]
-
-    # выволим их в консоль
-    print("Последние 5 добавленных продуктов")
-    for product in latest_products:
-        print(f"- {product.name} (Цена: {product.price})")
-
-        # Передаем список продуктов в контекст шаблона
-        return render(request, "home.html", {"latest_products": latest_products})
+class HomeView(ListView):
+    model = Product
+    template_name = "home.html"
+    context_object_name = "latest_products"
+    queryset = Product.objects.order_by("-created_at")[:5]
 
 
-def contacts(request):
-    # Получаем контактную информацию из базы данных
-    contact_info = ContactInfo.objects.first()
+class ContactView(FormMixin, TemplateView):
+    template_name = "contacts.html"
+    form_class = ContactForm
+    success_url = reverse_lazy("catalog:contacts")  # Перенаправление на ту же страницу после отправки
 
-    if request.method == "POST":
-        # Получаем данные из формы
-        name = request.POST.get("name")
-        phone = request.POST.get("phone")
-        message = request.POST.get("message")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Получаем контактную информацию из базы данных
+        context["contact_info"] = ContactInfo.objects.first()
+        return context
 
-        print(f"Получено сообщение от {name}: телефон: {phone} и сообщение: {message}")
-
-        # Перел/даём контактную информацию и данные в контекст
-        return render(request, "contacts.html",
-                      {"contact_info": contact_info, "name": name, "phone": phone, "message": message})
-
-    # Если метод запроса GET, то просто выводим страницу контактов
-    return render(request, "contacts.html", {"contact_info": contact_info})
-
-
-def product_detail(request, pk):
-    # Получаем продукт по pk или возвращаем ошибку 404
-    product = get_object_or_404(Product, pk=pk)
-    context = {
-    "product": product,
-    "category_pk": product.category.pk  # Добавляем PK категории в контекст
-    }
-    return render(request, "product_detail.html", context)
-
-
-def category_list(request):
-    categories = Category.objects.all() # Получаем все категории
-    context = {
-        "categories": categories # Передаем их в контекст
-    }
-    return render(request, "category_list.html", context)
-
-
-def product_list_by_category(request, pk):
-    # Получаем категорию по pk или возвращаем ошибку 404
-    category = get_object_or_404(Category, pk=pk)
-    # Получаем все продукты, связанные с этой категорией
-    products = Product.objects.filter(category=category)
-    context = {
-        "category": category,
-        "products": products
-    }
-    return render(request, "product_list_by_category.html", context)
-
-
-def create_product(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
         if form.is_valid():
-            form.save()
-            # Перенаправляем пользователя, например, на главную страницу или список товаров
-            return redirect('catalog:home') # Укажите имя URL-шаблона, куда перенаправить
-    else:
-        form = ProductForm()
-    context = {'form': form}
-    return render(request, 'product_create.html', context)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        # Обработка данных формы (например, отправка email или сохранение в БД)
+        name = form.cleaned_data["name"]
+        phone = form.cleaned_data["phone"]
+        message = form.cleaned_data["message"]
+        print(f"Получено сообщение от {name}: телефон: {phone} и сообщение: {message}")
+        # Здесь можно добавить логику отправки email или сохранения в базу данных
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Если форма невалидна, рендерим шаблон с ошибками
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "product_detail.html"
+    context_object_name = "product"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Добавляем PK категории в контекст для ссылки "Назад к категории"
+        context["category_pk"] = self.object.category.pk
+        return context
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = "category_list.html"
+    context_object_name = "categories"
+    queryset = Category.objects.all()
+
+
+class ProductListByCategoryView(ListView):
+    model = Product
+    template_name = "product_list_by_category.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        # Получаем PK категории из URL и фильтруем продукты
+        category_pk = self.kwargs["pk"]
+        return Product.objects.filter(category__pk=category_pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Получаем объект категории для отображения в заголовке
+        context["category"] = get_object_or_404(Category, pk=self.kwargs["pk"])
+        return context
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "product_create.html"
+    success_url = reverse_lazy("catalog:home")  # Перенаправление после успешного создания
