@@ -11,7 +11,9 @@
             {% if product.image %}
                 <img src="{{ product.image.url }}" class="card-img-top product-detail-image" alt="{{ product.name }}">
             {% else %}
-                <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
+                <div class="product-img-container"> {# Оборачиваем заглушку в контейнер #}
+                    <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
+                </div> {# Закрываем контейнер #}
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ product.name }}</h5>

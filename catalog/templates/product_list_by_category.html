@@ -8,17 +8,17 @@
     <div class="row mb-5">  {# Добавляем класс mb-5 для нижнего отступа #}
         {% for product in products %}
             <div class="col-sm-6 col-md-4 col-lg-3"> {# Используем колонки для адаптивности #}
-                <div class="card product-card mb-4 box-shadow"> {# Added product-card class and mb-4 #}
-                    <div class="product-img-container"> {# Added image container #}
+                <div class="card product-card mb-4 box-shadow"> {# Добавлен класс product-card и mb-4 #}
+                    <div class="product-img-container"> {# Добавлен контейнер для изображений #}
                         {% if product.image %}
                             <img src="{{ product.image.url }}" class="product-img card-img-top"
-                                 alt="{{ product.name }}"> {# Added product-img class #}
+                                 alt="{{ product.name }}"> {# Добавлен класс product-img #}
                         {% else %}
                             <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
                             {# Placeholder #}
                         {% endif %}
                     </div>
-                    {# Close image container #}
+                    {# Закрываем контейнер с изображением #}
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{ product.description|truncatechars:100 }}</p>
