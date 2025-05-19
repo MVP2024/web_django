@@ -6,6 +6,11 @@ from .models import Product
 
 
 class ProductForm(forms.ModelForm):
+    """
+    Форма для создания и редактирования продуктов.
+    Использует модель Product и настраивает виджеты для полей формы.
+    """
+
     class Meta:
         model = Product
         fields = ["name", "description", "image", "category", "price"]
@@ -19,6 +24,11 @@ class ProductForm(forms.ModelForm):
 
 
 class ContactForm(forms.Form):
+    """
+    Форма для страницы контактов.
+    Собирает имя, телефон и сообщение от пользователя.
+    """
+
     name = forms.CharField(
         max_length=100, label="Имя", widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Ваше имя"})
     )

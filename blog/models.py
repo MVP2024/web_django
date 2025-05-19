@@ -2,6 +2,11 @@ from django.db import models
 
 
 class Post(models.Model):
+    """
+    Модель для представления записи блога.
+    Содержит заголовок, содержимое, превью, дату создания, статус публикации и количество просмотров.
+    """
+
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     content = models.TextField(verbose_name="Содержимое")
     preview = models.ImageField(upload_to="blog_previews/%Y/%m/%d/", verbose_name="Превью", null=True, blank=True)
@@ -10,6 +15,7 @@ class Post(models.Model):
     views_count = models.IntegerField(default=0, verbose_name="Количество просмотров")
 
     def __str__(self) -> str:
+        """Возвращает строковое представление записи блога (заголовок)."""
         return self.title
 
     class Meta:

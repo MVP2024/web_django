@@ -4,6 +4,11 @@ from .models import Post
 
 
 class PostForm(forms.ModelForm):
+    """
+    Форма для создания и редактирования записей блога.
+    Использует модель Post и настраивает виджеты для полей формы.
+    """
+
     class Meta:
         model = Post
         fields = ["title", "content", "preview", "is_published"]
