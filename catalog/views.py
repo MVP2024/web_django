@@ -1,10 +1,10 @@
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.views.generic import CreateView, DetailView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
 
-from .forms import ProductForm, ContactForm
-from .models import Product, ContactInfo, Category
+from .forms import ContactForm, ProductForm
+from .models import Category, ContactInfo, Product
 
 
 class HomeView(ListView):

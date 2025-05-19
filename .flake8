@@ -5,4 +5,5 @@ exclude =
     __pycache__,
     migrations,
     .venv,
-    dist
+    dist,
+    E203
