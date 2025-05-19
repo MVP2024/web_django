@@ -5,9 +5,9 @@
 {% block content %}
     <h1 class="text-center mb-4">Товары в категории "{{ category.name }}"</h1>
 
-    <div class="row mb-5">  {# Добавляем класс mb-5 для нижнего отступа #}
+    <div class="row mb-4">  {# Добавляем класс mb-5 для нижнего отступа #}
         {% for product in products %}
-            <div class="col-sm-6 col-md-4 col-lg-3"> {# Используем колонки для адаптивности #}
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4"> {# Используем колонки для адаптивности #}
                 <div class="card product-card mb-4 box-shadow"> {# Добавлен класс product-card и mb-4 #}
                     <div class="product-img-container"> {# Добавлен контейнер для изображений #}
                         {% if product.image %}
