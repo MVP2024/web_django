@@ -37,6 +37,12 @@ class ProductForm(forms.ModelForm):
             "price": forms.NumberInput(attrs={"class": "form-control"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name not in ["image", "category"]: # если есть поля с заданными виджетами, то их исключаем.
+                field.widget.attrs["class"] = "form-control"
+
     def clean_name(self):
         """
         Валидация поля 'name' на наличие запрещённых слов
