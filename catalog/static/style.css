@@ -67,8 +67,13 @@
 
 .main-content-wrapper { /* Новый стиль для обертки контента */
     flex-grow: 1; /* Позволяем обертке контента занимать все доступное пространство, выталкивая футер вниз */
+    /*margin-bottom: 4rem; !* Добавляем нижний отступ *!*/
 }
 
+/* новый стиль для тега footer с верхним отступом. */
+footer {
+    margin-top: 4rem; /* Можете настроить это значение */
+}
 
 /* Стили для ограничения ширины карточек в основном содержимом и центрирования */
 .main-content .card {
@@ -94,7 +99,7 @@
 }
 
 
-/* Стили для карточек категорий (перенесены из category_list.html) */
+/* Стили для карточек категорий */
 .category-card {
     margin-bottom: 1.5rem;
     border: 1px solid #e0e0e0;
@@ -102,6 +107,9 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     overflow: hidden;
     transition: transform 0.2s ease-in-out;
+    display: flex; /* Добавляем Flexbox */
+    flex-direction: column; /* Элементы располагаются вертикально */
+    height: 100%; /* Карточка занимает всю высоту колонки */
 }
 
 .category-card:hover {
@@ -112,6 +120,9 @@
 .category-card .card-body {
     padding: 1.5rem;
     text-align: center;
+    display: flex; /* Добавляем Flexbox */
+    flex-direction: column; /* Элементы располагаются вертикально */
+    flex-grow: 1; /* Тело карточки занимает все доступное пространство */
 }
 
 .category-card .card-title {
@@ -122,10 +133,11 @@
 
 .category-card .card-text {
     color: #666;
+    /* Убедитесь, что нет flex-grow, чтобы описание не растягивалось */
 }
 
 .category-card .btn {
-    margin-top: 1rem;
+    margin-top: auto; /* Прижимает кнопку к низу тела карточки */
 }
 
 /* Стили, специфичные для карточки на странице деталей продукта (перенесены из product_detail.html) */
@@ -147,11 +159,89 @@
     text-align: left;
 }
 
-/* Стили для изображений категорий */
+/* Стили для контейнера изображения категории */
+.category-img-container {
+    width: 100%;
+    height: 180px; /* Фиксированная высота для контейнера изображения */
+    overflow: hidden; /* Обрезаем все, что выходит за пределы контейнера */
+    display: flex; /* Используем Flexbox для центрирования изображения */
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa; /* Светлый фон для контейнера */
+}
+
+/* Стили для изображения категории */
 .category-img {
-    width: 100%; /* Изображение занимает всю ширину карточки */
-    height: 150px; /* Задаем фиксированную высоту (можно настроить) */
-    object-fit: cover; /* Обрезаем изображение, чтобы оно полностью заполняло контейнер */
-    border-top-left-radius: calc(0.5rem - 1px); /* Скругление верхних углов */
-    border-top-right-radius: calc(0.5rem - 1px); /* Скругление верхних углов */
+    width: 100%; /* Изображение занимает всю ширину контейнера */
+    height: 100%; /* Изображение занимает всю высоту контейнера */
+    object-fit: cover; /* Изображение заполняет контейнер, обрезая лишнее */
+    /* Скругление верхних углов теперь управляется .category-card */
+}
+
+.product-card {
+    max-width: 300px; /* Максимальная ширина карточки */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem; /* Отступ снизу */
+    border: 1px solid #e0e0e0; /* Граница */
+    border-radius: 0.5rem; /* Скругление углов */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Тень */
+    overflow: hidden; /* Скрываем все, что выходит за пределы */
+    display: flex; /* Используем Flexbox для содержимого карточки */
+    flex-direction: column; /* Элементы внутри карточки располагаются вертикально */
+    /*height: 100%; !* Карточка занимает всю доступную высоту в своей колонке *!*/
+}
+
+.product-img-container {
+    width: 100%;
+    height: 200px; /* Фиксированная высота для контейнера изображения */
+    overflow: hidden; /* Скрываем части изображения, выходящие за контейнер */
+    display: flex; /* Используем Flexbox для центрирования заглушки */
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa; /* Светлый фон для контейнера */
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Изображение заполняет контейнер, обрезая лишнее */
+}
+
+.product-img-placeholder {
+    text-align: center;
+    color: #6c757d; /* Цвет текста заглушки */
+    padding: 1rem;
+    font-size: 0.9rem;
+}
+
+.product-card .card-body {
+    display: flex; /* Используем Flexbox для содержимого тела карточки */
+    flex-direction: column; /* Элементы внутри тела карточки располагаются вертикально */
+    flex-grow: 1; /* Тело карточки растягивается, занимая все доступное пространство */
+    padding: 1.5rem; /* Внутренние отступы */
+}
+
+.product-card .card-body .card-title {
+    margin-bottom: 0.75rem; /* Отступ под заголовком */
+}
+
+.product-card .card-body .card-text {
+    /* Стили для описания */
+    margin-bottom: 1rem; /* Отступ под описанием */
+    /* Убедитесь, что нет flex-grow, чтобы описание не растягивалось */
+}
+
+.product-card .card-body .card-text strong {
+     display: block; /* Цена с новой строки */
+     margin-top: 0.5rem; /* Отступ над ценой */
+}
+
+
+.product-card .card-body .btn {
+    margin-top: auto; /* Прижимает кнопку к низу тела карточки */
+}
+
+.back-button-container {
+    margin-top: 12rem; /* Увеличьте значение, если 3rem недостаточно */
 }

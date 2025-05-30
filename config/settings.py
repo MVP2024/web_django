@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "catalog",
+    "blog",
 ]
 
 MIDDLEWARE = [
@@ -112,3 +113,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+# Настройки Email для тестирования и отладки, если что можно закомимтить, когда настроишь в .env
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Используем для вывода писем в консоль
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True" # Преобразуем строку в булево значение
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL") == "True" # Преобразуем строку в булево значение
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
