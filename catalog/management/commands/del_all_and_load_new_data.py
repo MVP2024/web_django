@@ -5,18 +5,9 @@ from catalog.models import Category, Product
 
 
 class Command(BaseCommand):
-    """
-    Команда управления Django для очистки существующих данных
-    и загрузки тестовых данных из фикстуры 'initial_data'.
-    """
-
     help = "Загружает тестовые данные из фикстуры после очистки существующих данных"
 
     def handle(self, *args, **options):
-        """
-        Логика выполнения команды.
-        Удаляет все продукты и категории, затем загружает данные из фикстуры.
-        """
         self.stdout.write("Удаление существующих данных...")
         # Удаляем данные из моделей Product и Category
         Product.objects.all().delete()
