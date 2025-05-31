@@ -1,13 +1,14 @@
 # File: D:/Project/web_django-develop/catalog/urls.py
 
 from django.urls import path
+
 from .views import (
-    HomeView,
-    ContactView,
-    ProductDetailView,
     CategoryListView,
-    ProductListByCategoryView,
+    ContactView,
+    HomeView,
     ProductCreateView,
+    ProductDetailView,
+    ProductListByCategoryView,
 )
 
 app_name = "catalog"

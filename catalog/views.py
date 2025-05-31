@@ -1,13 +1,17 @@
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.views.generic import CreateView, DetailView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
 
-from .forms import ProductForm, ContactForm
-from .models import Product, ContactInfo, Category
+from .forms import ContactForm, ProductForm
+from .models import Category, ContactInfo, Product
 
 
 class HomeView(ListView):
+    """
+    Представление для отображения главной страницы с последними продуктами.
+    """
+
     model = Product
     template_name = "home.html"
     context_object_name = "latest_products"
@@ -15,17 +19,28 @@ class HomeView(ListView):
 
 
 class ContactView(FormMixin, TemplateView):
+    """
+    Представление для страницы контактов с формой обратной связи.
+    Обрабатывает отправку формы и отображает контактную информацию.
+    """
+
     template_name = "contacts.html"
     form_class = ContactForm
     success_url = reverse_lazy("catalog:contacts")  # Перенаправление на ту же страницу после отправки
 
     def get_context_data(self, **kwargs):
+        """
+        Добавляет контактную информацию в контекст шаблона.
+        """
         context = super().get_context_data(**kwargs)
         # Получаем контактную информацию из базы данных
         context["contact_info"] = ContactInfo.objects.first()
         return context
 
     def post(self, request, *args, **kwargs):
+        """
+        Обрабатывает POST-запрос формы контактов.
+        """
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
@@ -33,6 +48,10 @@ class ContactView(FormMixin, TemplateView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
+        """
+        Обрабатывает валидную форму.
+        Выводит данные формы в консоль (можно добавить отправку email или сохранение в БД).
+        """
         # Обработка данных формы (например, отправка email или сохранение в БД)
         name = form.cleaned_data["name"]
         phone = form.cleaned_data["phone"]
@@ -42,16 +61,26 @@ class ContactView(FormMixin, TemplateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
+        """
+        Обрабатывает невалидную форму, рендерит шаблон с ошибками.
+        """
         # Если форма невалидна, рендерим шаблон с ошибками
         return self.render_to_response(self.get_context_data(form=form))
 
 
 class ProductDetailView(DetailView):
+    """
+    Представление для отображения деталей одного продукта.
+    """
+
     model = Product
     template_name = "product_detail.html"
     context_object_name = "product"
 
     def get_context_data(self, **kwargs):
+        """
+        Добавляет PK категории продукта в контекст для ссылки "Назад к категории".
+        """
         context = super().get_context_data(**kwargs)
         # Добавляем PK категории в контекст для ссылки "Назад к категории"
         context["category_pk"] = self.object.category.pk
@@ -59,6 +88,10 @@ class ProductDetailView(DetailView):
 
 
 class CategoryListView(ListView):
+    """
+    Представление для отображения списка всех категорий продуктов.
+    """
+
     model = Category
     template_name = "category_list.html"
     context_object_name = "categories"
@@ -66,16 +99,26 @@ class CategoryListView(ListView):
 
 
 class ProductListByCategoryView(ListView):
+    """
+    Представление для отображения списка продуктов по конкретной категории.
+    """
+
     model = Product
     template_name = "product_list_by_category.html"
     context_object_name = "products"
 
     def get_queryset(self):
+        """
+        Фильтрует продукты по PK категории, полученному из URL.
+        """
         # Получаем PK категории из URL и фильтруем продукты
         category_pk = self.kwargs["pk"]
         return Product.objects.filter(category__pk=category_pk)
 
     def get_context_data(self, **kwargs):
+        """
+        Добавляет объект категории в контекст для отображения в заголовке.
+        """
         context = super().get_context_data(**kwargs)
         # Получаем объект категории для отображения в заголовке
         context["category"] = get_object_or_404(Category, pk=self.kwargs["pk"])
@@ -83,6 +126,10 @@ class ProductListByCategoryView(ListView):
 
 
 class ProductCreateView(CreateView):
+    """
+    Представление для создания нового продукта.
+    """
+
     model = Product
     form_class = ProductForm
     template_name = "product_create.html"
