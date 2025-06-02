@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "catalog",
     "blog",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,5 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True" # Преобразуем с
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL") == "True" # Преобразуем строку в булево значение
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+AUTH_USER_MODEL = 'users.User'
