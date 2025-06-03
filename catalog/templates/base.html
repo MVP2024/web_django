@@ -48,8 +48,7 @@
                             {{ user.first_name|default:user.email }} {# Отображаем имя или email, если имя не указано #}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
-                                                        <li><a class="dropdown-item" href="{% url 'users:profile_edit' %}">Профиль</a></li>
-                            {# TODO: Добавьте здесь URL для страницы профиля пользователя #}
+                            <li><a class="dropdown-item" href="{% url 'users:profile_edit' %}">Профиль</a></li>
                             <li>
                                 <form action="{% url 'users:logout' %}" method="post" class="d-inline">
                                     {% csrf_token %}
@@ -83,7 +82,8 @@
                         {% for message in messages %}
                             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                                 {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                             </div>
                         {% endfor %}
                     </div>
