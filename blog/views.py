@@ -8,6 +8,7 @@ from django.views.generic import (
 )
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin # Импортируем миксин
 
 from .models import Post
 from .forms import PostForm
@@ -33,7 +34,6 @@ class PostDetailView(DetailView):
 
         if self.object.views_count == 100:
             subject = f'Поздравляем! Статья "{self.object.title}" достигла 100 просмотров!'
-            # Используем self.object.pk для генерации URL
             message = f'Ваша статья "{self.object.title}" набрала 100 просмотров.\n\nСсылка на статью: {self.request.build_absolute_uri(reverse_lazy("blog:detail", kwargs={"pk": self.object.pk}))}'
             from_email = settings.EMAIL_HOST_USER
             recipient_list = [settings.EMAIL_HOST_USER]
@@ -47,25 +47,24 @@ class PostDetailView(DetailView):
         return self.object
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView): # Добавляем LoginRequiredMixin
     model = Post
     form_class = PostForm
     template_name = 'blog/post_form.html'
     success_url = reverse_lazy('blog:list')
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView): # Добавили LoginRequiredMixin
     model = Post
     form_class = PostForm
     template_name = 'blog/post_form.html'
     pk_url_kwarg = 'pk'
 
     def get_success_url(self):
-        # Используем self.object.pk для перенаправления
         return reverse_lazy('blog:detail', kwargs={'pk': self.object.pk})
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView): # Добавили LoginRequiredMixin
     model = Post
     template_name = 'blog/post_confirm_delete.html'
     success_url = reverse_lazy('blog:list')

@@ -3,16 +3,29 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User
 
 class CustomUserCreationForm(UserCreationForm):
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model = User
-        # Указываем поля, которые будут использоваться при создании пользователя
-        # Исключаем 'username', так как авторизация идет по email
-        fields = ('email', 'first_name', 'last_name', 'avatar', 'phone', 'country', 'password', 'password2')
+        # UserCreationForm автоматически обрабатывает поля USERNAME_FIELD (email) и пароль.
+        # Здесь нужно указывать только дополнительные поля, которые вы добавили в модель User.
+        fields = ('email', 'first_name', 'last_name', 'avatar', 'phone', 'country',)
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = User
-        # Указываем поля, которые будут доступны для изменения в админке
-        # Исключаем 'username', так как авторизация идет по email
-        fields = ('email', 'first_name', 'last_name', 'avatar', 'phone', 'country',
+        # Для формы изменения пользователя можно явно перечислить все поля,
+        # которые вы хотите сделать доступными для редактирования.
+        fields = ('email', 'username', 'first_name', 'last_name', 'avatar', 'phone', 'country',
                   'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+
+# Новая форма для редактирования профиля пользователя
+class UserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'avatar', 'phone', 'country',)
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'avatar': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'country': forms.TextInput(attrs={'class': 'form-control'}),
+        }

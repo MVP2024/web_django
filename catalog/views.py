@@ -2,6 +2,8 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView
 from django.views.generic.edit import FormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages # Добавлено
 
 from .forms import ProductForm, ContactForm
 from .models import Product, ContactInfo, Category
@@ -46,10 +48,14 @@ class ContactView(FormMixin, TemplateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "product_detail.html"
     context_object_name = "product"
+
+    def handle_no_permission(self): # Добавлено
+        messages.error(self.request, "Просмотр отдельного товара ограничен, т.к. вы не авторизованы.")
+        return super().handle_no_permission()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -82,7 +88,7 @@ class ProductListByCategoryView(ListView):
         return context
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "product_create.html"

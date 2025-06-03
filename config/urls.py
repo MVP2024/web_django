@@ -8,4 +8,5 @@ urlpatterns = [
                   path("admin/", admin.site.urls),
                   path("", include("catalog.urls", namespace="catalog")),
                   path("blog/", include("blog.urls", namespace="blog")),  # Добавляем URL-адреса блога
+                  path("users/", include("users.urls", namespace="users")),  # Добавляем URL-адреса пользователей
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
