@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView
 from django.views.generic.edit import FormMixin
-from django.db.models import QuerySet
+
 
 
 from .forms import ContactForm, ProductForm
@@ -83,7 +83,7 @@ class ProductListByCategoryView(ListView):
     template_name = "product_list_by_category.html"
     context_object_name = "products"
 
-    def get_queryset(self) -> QuerySet[Product]:
+    def get_queryset(self):
         # Получаем PK категории из URL и фильтруем продукты
         category_pk = self.kwargs["pk"]
         return Product.objects.filter(category__pk=category_pk)

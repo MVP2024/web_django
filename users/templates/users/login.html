@@ -14,15 +14,18 @@
                         <form method="post">
                             {% csrf_token %}
                             {% for field in form %}
-                                <div class="mb-3">
-                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                    {{ field }}
-                                    {% if field.help_text %}
-                                        <div class="form-text">{{ field.help_text }}</div>
-                                    {% endif %}
-                                    {% for error in field.errors %}
-                                        <div class="alert alert-danger mt-1">{{ error }}</div>
-                                    {% endfor %}
+                                <div class="row mb-3">
+                                    <label for="{{ field.id_for_label }}"
+                                           class="col-sm-4 col-form-label">{{ field.label }}</label>
+                                    <div class="col-sm-8">
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <div class="form-text">{{ field.help_text }}</div>
+                                        {% endif %}
+                                        {% for error in field.errors %}
+                                            <div class="alert alert-danger mt-1">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             {% endfor %}
                             {% if form.non_field_errors %}
@@ -36,6 +39,8 @@
                         </form>
                         <p class="text-center mt-3">Нет аккаунта? <a href="{% url 'users:register' %}">Зарегистрироваться</a>
                         </p>
+                        <p class="text-center mt-2"><a href="#">Забыли пароль?</a></p>
+                        {# TODO: Реализовать функционал сброса пароля #}
                     </div>
                 </div>
             </div>

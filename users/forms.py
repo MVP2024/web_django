@@ -9,6 +9,7 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         # UserCreationForm автоматически обрабатывает поля USERNAME_FIELD (email) и пароль.
         # Здесь нужно указывать только дополнительные поля, которые вы добавили в модель User.
+        # Если вы переопределяете fields, вы должны явно включить USERNAME_FIELD и поля пароля.
         fields = (
             "email",
             "first_name",
@@ -16,6 +17,8 @@ class CustomUserCreationForm(UserCreationForm):
             "avatar",
             "phone",
             "country",
+            "password",
+            "password2",
         )
 
 
