@@ -9,7 +9,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "image_display")
     search_fields = ("name",)
 
-    def image_display(self, obj):
+    def image_display(self, obj) -> str:
         if obj.image:
             return mark_safe(f'<img src="{obj.image.url}" width="50" height="50" />')
         return "-"
@@ -24,7 +24,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("name", "description")
     readonly_fields = ("created_at", "updated_at")
 
-    def image_display(self, obj):
+    def image_display(self, obj) -> str:
         if obj.image:
             return mark_safe(f'<img src="{obj.image.url}" width="50" height="50" />')
         return "-"

@@ -4,27 +4,31 @@
 
 {% block content %}
 
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <h1 class="text-center mb-4">{{ product.name }}</h1>
-        <div class="card mb-4 product-detail-card"> {# Добавлен класс product-detail-card #}
-            {% if product.image %}
-                <img src="{{ product.image.url }}" class="card-img-top product-detail-image" alt="{{ product.name }}">
-            {% else %}
-                <div class="product-img-container"> {# Оборачиваем заглушку в контейнер #}
-                    <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
-                </div> {# Закрываем контейнер #}
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text">{{ product.description }}</p>
-                <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
-                <p class="card-text"><strong>Категория:</strong> {{ product.category.name }}</p>
-                <p class="card-text"><small class="text-muted">Создано: {{ product.created_at|date:"d.m.Y H:i" }}</small></p>
-                <p class="card-text"><small class="text-muted">Обновлено: {{ product.updated_at|date:"d.m.Y H:i" }}</small></p>
-                <a href="{% url 'catalog:product_list_by_category' category_pk %}" class="btn btn-outline-primary mt-3">Назад к категории {{ product.category.name }}</a>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="text-center mb-4">{{ product.name }}</h1>
+            <div class="card mb-4 product-detail-card"> {# Добавлен класс product-detail-card #}
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top product-detail-image"
+                         alt="{{ product.name }}">
+                {% else %}
+                    <div class="product-img-container"> {# Оборачиваем заглушку в контейнер #}
+                        <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
+                    </div> {# Закрываем контейнер #}
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
+                    <p class="card-text"><strong>Категория:</strong> {{ product.category.name }}</p>
+                    <p class="card-text"><small
+                            class="text-muted">Создано: {{ product.created_at|date:"d.m.Y H:i" }}</small></p>
+                    <p class="card-text"><small
+                            class="text-muted">Обновлено: {{ product.updated_at|date:"d.m.Y H:i" }}</small></p>
+                    <a href="{% url 'catalog:product_list_by_category' category_pk %}"
+                       class="btn btn-outline-primary mt-3">Назад к категории {{ product.category.name }}</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     content = models.TextField(verbose_name="Содержимое")
@@ -8,9 +9,8 @@ class Post(models.Model):
     is_published = models.BooleanField(default=False, verbose_name="Опубликовано")
     views_count = models.IntegerField(default=0, verbose_name="Количество просмотров")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
-
 
     class Meta:
         verbose_name = "Запись блога"

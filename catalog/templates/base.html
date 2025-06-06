@@ -6,9 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Мир товаров{% endblock %}</title>
     <!-- Подключение Bootstrap CSS с CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- Подключение Material Symbols с CDN -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
     <!-- Подключение собственных стилей -->
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
@@ -23,7 +25,8 @@
                 <!-- Оборачиваем логотип и текст в ссылку -->
                 <a href="{% url 'catalog:home' %}" class="d-flex align-items-center text-white text-decoration-none">
                     <!-- Логотип теперь загружается по URL -->
-                    <img src="https://i.pinimg.com/736x/18/46/a7/1846a70b1eb7448ca07c29e45584519f.jpg" alt="Логотип" class="me-2" style="height: 2em;">
+                    <img src="https://i.pinimg.com/736x/18/46/a7/1846a70b1eb7448ca07c29e45584519f.jpg" alt="Логотип"
+                         class="me-2" style="height: 2em;">
                     <h5 class="mb-0">Меню</h5>
                 </a>
             </div>
@@ -31,16 +34,41 @@
             <div class="user-info">
                 <!-- Блок пользователя с аватаркой и выпадающим меню -->
                 <div class="dropdown dropup">
-                    <!-- Этот тег <а> уже является ссылкой и триггером выпадающего меню -->
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <!-- Аватар пользователя теперь загружается по URL -->
-                        <img src="https://static.kinoafisha.info/k/movie_shots/1920x1080/upload/movie_shots/5/1/7/8125715/30a519abee1808f12a021aeb41a06c21.jpg" alt="Аватар пользователя" class="rounded-circle me-2" style="height: 2em; width: 2em; object-fit: cover;">
-                        Пользователь
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="#">Профиль</a></li>
-                        <li><a class="dropdown-item" href="#">Выход</a></li>
-                    </ul>
+                    {% if user.is_authenticated %}
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="Аватар пользователя" class="rounded-circle me-2"
+                                     style="height: 2em; width: 2em; object-fit: cover;">
+                            {% else %}
+                                {# Используем заглушку, если аватара нет. Убедитесь, что у вас есть static/default_avatar.png #}
+                                <img src="{% static 'default_avatar.png' %}" alt="Аватар по умолчанию"
+                                     class="rounded-circle me-2" style="height: 2em; width: 2em; object-fit: cover;">
+                            {% endif %}
+                            {{ user.first_name|default:user.email }} {# Отображаем имя или email, если имя не указано #}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'users:profile_edit' %}">Профиль</a></li>
+                            <li>
+                                <form action="{% url 'users:logout' %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">Выход</button>
+                                </form>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            {# Заглушка для неавторизованного пользователя #}
+                            <img src="{% static 'default_avatar.png' %}" alt="Аватар по умолчанию"
+                                 class="rounded-circle me-2" style="height: 2em; width: 2em; object-fit: cover;">
+                            Гость
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'users:login' %}">Войти</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:register' %}">Зарегистрироваться</a></li>
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -48,10 +76,23 @@
         <!-- Основное содержимое -->
         <div class="col-md-9 col-lg-10 main-content">
             <div class="main-content-wrapper"> {# Новый div-обертка начинается здесь #}
+                {# Блок для вывода сообщений Django #}
+                {% if messages %}
+                    <div class="container mt-3">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 {% block content %}
-                {# Содержимое дочерних шаблонов будет вставляться здесь #}
+                    {# Содержимое дочерних шаблонов будет вставляться здесь #}
                 {% endblock %}
-            </div> {# Новый div-обертка заканчивается здесь #}
+            </div>
+            {# Новый div-обертка заканчивается здесь #}
 
             {# Футер, общий для всех страниц #}
             <footer class="pt-4 my-md-1 pt-md-5 border-top"> {#  my-md-5 удалить можно для эксперимента #}
@@ -61,28 +102,30 @@
                         <small class="d-block mb-3 text-muted">&copy; 2025</small>
                     </div>
                     <div class="col-6 col-md">
-{#                        <h5>Категории</h5>#}
-{#                        <ul class="list-unstyled text-small">#}
-                            {# Заглушки в футере - можно обновить их позже #}
-{#                            <li><a class="text-muted" href="#">Аксессуары</a></li>#}
-{#                            <li><a class="text-muted" href="#">Овощи</a></li>#}
-{#                            <li><a class="text-muted" href="#">Одежда</a></li>#}
-{#                            <li><a class="text-muted" href="#">Спорт</a></li>#}
-{#                            <li><a class="text-muted" href="#">Фрукты</a></li>#}
-{#                            <li><a class="text-muted" href="#">Электроника</a></li>#}
-{#                            <li><a class="text-muted" href="#">Ягоды</a></li>#}
-{#                        </ul>#}
+                        {#                        <h5>Категории</h5>#}
+                        {#                        <ul class="list-unstyled text-small">#}
+                        {# Заглушки в футере - можно обновить их позже #}
+                        {#                            <li><a class="text-muted" href="#">Аксессуары</a></li>#}
+                        {#                            <li><a class="text-muted" href="#">Овощи</a></li>#}
+                        {#                            <li><a class="text-muted" href="#">Одежда</a></li>#}
+                        {#                            <li><a class="text-muted" href="#">Спорт</a></li>#}
+                        {#                            <li><a class="text-muted" href="#">Фрукты</a></li>#}
+                        {#                            <li><a class="text-muted" href="#">Электроника</a></li>#}
+                        {#                            <li><a class="text-muted" href="#">Ягоды</a></li>#}
+                        {#                        </ul>#}
                     </div>
                     <div class="col-6 col-md">
                         <h5>Мы в телеграмме</h5>
                         <ul class="list-unstyled text-small">
-                            <li><a class="text-primary" href="/telegram_bot/">Go в телеграм</a></li> {# Заглушка #}
+                            <li><a class="text-primary" href="/telegram_bot/">Go в телеграм</a></li>
+                            {# Заглушка #}
                         </ul>
                     </div>
                     <div class="col-6 col-md">
                         <h5>О нас</h5>
                         <ul class="list-unstyled text-small">
-                            <li><a class="text-muted" href="{% url 'catalog:contacts' %}">Контакты</a></li> {# Ссылка на контакты #}
+                            <li><a class="text-muted" href="{% url 'catalog:contacts' %}">Контакты</a></li>
+                            {# Ссылка на контакты #}
                         </ul>
                     </div>
                 </div>
@@ -92,6 +135,8 @@
 </div>
 
 <!-- Подключение Bootstrap JS с CDN -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
 </body>
 </html>

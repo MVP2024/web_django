@@ -15,29 +15,26 @@
         <div class="row text-center mb-5"> {# Если что Добавляем класс mb-5 для нижнего отступа #}
             {# Перебираем последние 5 продуктов, переданных из представления #}
             {% for product in latest_products %}
-                <div class="col-md-4">
-                    <div class="card product-card mb-4 box-shadow"> {# mb-4 на карточке создает отступ снизу #}
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card mb-4 box-shadow d-flex h-100">
                         <div class="card-header">
                             <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
                         </div>
-                        <div class="product-img-container"> {# Добавлен контейнер для изображений#}
+                        <div class="product-img-container">
                             {% if product.image %}
                                 <img src="{{ product.image.url }}" class="product-img card-img-top"
-                                     alt="{{ product.name }}"> {# Добавлен продукт-класс img #}
+                                     alt="{{ product.name }}">
                             {% else %}
                                 <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
-                                {# Placeholder #}
                             {% endif %}
                         </div>
-                        {# Close image container #}
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column">
                             <h1 class="card-title pricing-card-title">$ {{ product.price }}</h1>
                             <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                                 <li>{{ product.description|truncatechars:100 }}</li>
-                                {# здесь выводим части описания #}
                             </ul>
                             <a href="{% url 'catalog:product_detail' product.pk %}"
-                               class="btn btn-lg btn-block btn-outline-primary">Купить</a>
+                               class="btn btn-lg btn-block btn-outline-primary mt-auto">Купить</a>
                         </div>
                     </div>
                 </div>

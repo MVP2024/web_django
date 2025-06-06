@@ -7,7 +7,7 @@ class Category(models.Model):
     description = models.TextField(verbose_name="Описание", null=True, blank=True)
     image = models.ImageField(upload_to="categories/%Y/%m/%d/", verbose_name="Изображение", null=True, blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name} {self.description}"
 
     class Meta:
@@ -31,7 +31,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата последнего изменения")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.image}  {self.name} {self.price}"
 
     class Meta:
@@ -45,7 +45,7 @@ class ContactInfo(models.Model):
     inn = models.CharField(max_length=20, verbose_name="ИНН")
     address = models.TextField(verbose_name="Адрес")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Контакты: {self.address}"
 
     class Meta:
