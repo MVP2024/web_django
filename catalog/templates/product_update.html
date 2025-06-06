@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Вход{% endblock %}
+{% block title %}Редактировать товар{% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card mt-5">
-                    <div class="card-header text-center">
-                        <h3>Вход</h3>
-                    </div>
+            <div class="col-md-8">
+                <h1 class="text-center mb-4">Редактировать товар</h1>
+                <div class="card">
                     <div class="card-body">
-                        <form method="post">
+                        <form method="post" enctype="multipart/form-data">
+                            {# Добавьте enctype="multipart/form-data" для загрузки файлов #}
                             {% csrf_token %}
                             {% for field in form %}
                                 <div class="row mb-3">
@@ -28,18 +27,8 @@
                                     </div>
                                 </div>
                             {% endfor %}
-                            {% if form.non_field_errors %}
-                                <div class="alert alert-danger">
-                                    {% for error in form.non_field_errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                            <button type="submit" class="btn btn-primary w-100">Войти</button>
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
                         </form>
-                        <p class="text-center mt-3">Нет аккаунта? <a href="{% url 'users:register' %}">Зарегистрироваться</a>
-                        </p>
-                        <p class="text-center mt-2"><a href="#">Забыли пароль?</a></p>
                     </div>
                 </div>
             </div>
