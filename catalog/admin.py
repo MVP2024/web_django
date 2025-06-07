@@ -18,8 +18,7 @@ class CategoryAdmin(admin.ModelAdmin, ImageDisplayLogicMixin):
     search_fields = ("name",)
 
     def image_display(self, obj) -> str:
-        if obj.image:
-            return self._get_image_html(obj)
+        return self._get_image_html(obj)
 
     image_display.short_description = "Изображение категорий"
 
@@ -40,8 +39,7 @@ class ProductAdmin(admin.ModelAdmin, ImageDisplayLogicMixin):
     unpublish_selected_products.short_description = "Отменить публикацию выбранных продуктов"
 
     def image_display(self, obj) -> str:
-        if obj.image:
-            return self._get_image_html(obj)
+        return self._get_image_html(obj)
 
     image_display.short_description = "Изображение"
 
