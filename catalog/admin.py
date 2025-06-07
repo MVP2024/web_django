@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-
+from django.core.exceptions import PermissionDenied
 from .models import Category, ContactInfo, Product
 
 
@@ -19,10 +19,18 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "price", "category", "image_display")
-    list_filter = ("category",)
+    list_display = ("id", "name", "price", "category", "owner", "image_display")
+    list_filter = ("category", "owner")
     search_fields = ("name", "description")
     readonly_fields = ("created_at", "updated_at")
+    actions = ["unpublish_selected_products"]
+
+    def unpublish_selected_products(self, request, queryset):
+        if not request.user.has_perm("catalog.can_unpublish_product"):
+            raise PermissionDenied
+        queryset.update(is_published=False)
+
+    unpublish_selected_products.short_description = "Отменить публикацию выбранных продуктов"
 
     def image_display(self, obj) -> str:
         if obj.image:

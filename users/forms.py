@@ -17,8 +17,6 @@ class CustomUserCreationForm(UserCreationForm):
             "avatar",
             "phone",
             "country",
-            "password",
-            "password2",
         )
 
 
