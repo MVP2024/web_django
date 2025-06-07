@@ -3,11 +3,15 @@ from django import template
 register = template.Library()
 
 
-@register.filter()
-def media_filter(path):
-    if path:
-        return f"media/{path}"
-    return "#"
+# @register.filter()
+# def media_filter(path):
+#     """
+#     Функция media_filter предназначена
+#     для добавления префикса "media/" к пути файла.
+#     """
+#     if path:
+#         return f"media/{path}"
+#     return "#"
 
 
 @register.filter(name='has_perm')
