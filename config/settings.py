@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-
+from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -112,7 +112,8 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Настройки Email для тестирования и отладки, если что можно закомимтить, когда настроишь в .env
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")  # Используем для вывода писем в консоль
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND",
+                          "django.core.mail.backends.console.EmailBackend")  # Используем для вывода писем в консоль
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"  # Преобразуем строку в булево значение
@@ -126,3 +127,26 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_REDIRECT_URL = "catalog:home"  # URL для перенаправления после успешного входа
 LOGOUT_REDIRECT_URL = "catalog:home"  # URL для перенаправления после выхода
 LOGIN_URL = "users:login"  # URL для страницы входа
+
+# настройки кеширования с Redis
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1"),  # Используем переменную окружения
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",  # Опционально: для сжатия
+            "IGNORE_EXCEPTIONS": True,  # Опционально: не прерывать работу, если Redis недоступен
+        },
+        "KEY_PREFIX": "web_django",  # Префикс для ключей кеша
+        "TIMEOUT": 60 * 15,  # Таймаут кеша по умолчанию (15 минут)
+    },
+    "product_cache": {  # Отдельный кеш для продуктов
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL_PRODUCTS", "redis://127.0.0.1:6379/2"),  # Отдельная база данных Redis
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "TIMEOUT": 60 * 60,  # Таймаут 1 час
+    }
+}

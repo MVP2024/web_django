@@ -117,8 +117,9 @@ class CachedProductListByCategoryView(ListView):
 
     def get_context_data(self, **kwargs: dict) -> dict:
         contex = super().get_context_data(**kwargs)
-        # Получаем объект категррии дял отображения в заголовке
+        # Получаем объект категории дял отображения в заголовке
         contex["category"] = get_object_or_404(Category, pk=self.kwargs["pk"])
+        return contex
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
@@ -132,7 +133,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # lобавлено новое представление
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # добавлено новое представление
     model = Product
     form_class = ProductForm
     template_name = "product_update.html"
