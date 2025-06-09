@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load my_tags %}
 
 {% block title %}Товары в категории "{{ category.name }}"{% endblock %}
 
@@ -8,22 +9,31 @@
     <div class="row mb-4">  {# Добавляем класс mb-5 для нижнего отступа #}
         {% for product in products %}
             <div class="col-sm-6 col-md-4 col-lg-3 mb-4"> {# Используем колонки для адаптивности #}
-                <div class="card product-card mb-4 box-shadow"> {# Добавлен класс product-card и mb-4 #}
-                    <div class="product-img-container"> {# Добавлен контейнер для изображений #}
+                <div class="card product-card box-shadow d-flex h-100">
+                    <div class="product-img-container">
                         {% if product.image %}
                             <img src="{{ product.image.url }}" class="product-img card-img-top"
-                                 alt="{{ product.name }}"> {# Добавлен класс product-img #}
+                                 alt="{{ product.name }}">
                         {% else %}
                             <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
-                            {# Placeholder #}
                         {% endif %}
                     </div>
-                    {# Закрываем контейнер с изображением #}
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{ product.description|truncatechars:100 }}</p>
                         <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
-                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-outline-primary">Подробнее</a>
+                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-outline-primary mt-auto">Подробнее</a>
+
+                        {# Кнопки редактирования и удаления #}
+                        {% if user == product.owner %}
+                            <a href="{% url 'catalog:update_product' product.pk %}" class="btn btn-info mt-2">Редактировать</a>
+                        {% endif %}
+                        {% if user == product.owner or user|has_perm:"catalog.delete_product" %}
+                            <form method="post" action="{% url 'catalog:delete_product' product.pk %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger mt-2">Удалить</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>

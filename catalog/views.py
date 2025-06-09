@@ -1,11 +1,23 @@
-from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.contrib import messages
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import CreateView, DetailView, ListView, TemplateView, UpdateView
 from django.views.generic.edit import FormMixin
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
+from django.views.generic.edit import DeleteView
 
-from .forms import ProductForm, ContactForm
-from .models import Product, ContactInfo, Category
+from .forms import ContactForm, ProductForm
+from .models import Category, ContactInfo, Product
 
+
+@permission_required('catalog.can_unpublish_product')
+def unpublish_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    product.is_published = False
+    product.save()
+    return redirect('catalog:product_detail', pk=pk)
 
 class HomeView(ListView):
     model = Product
@@ -19,39 +31,47 @@ class ContactView(FormMixin, TemplateView):
     form_class = ContactForm
     success_url = reverse_lazy("catalog:contacts")  # Перенаправление на ту же страницу после отправки
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         # Получаем контактную информацию из базы данных
         context["contact_info"] = ContactInfo.objects.first()
+        if "form" in kwargs:  # Добавлено для явного добавления формы в контекст, если она передана
+            context["form"] = kwargs["form"]
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
 
-    def form_valid(self, form):
+    def form_valid(self, form: ContactForm) -> HttpResponse:
         # Обработка данных формы (например, отправка email или сохранение в БД)
         name = form.cleaned_data["name"]
         phone = form.cleaned_data["phone"]
         message = form.cleaned_data["message"]
         print(f"Получено сообщение от {name}: телефон: {phone} и сообщение: {message}")
-        # Здесь можно добавить логику отправки email или сохранения в базу данных
+
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        # Если форма невалидна, рендерим шаблон с ошибками
-        return self.render_to_response(self.get_context_data(form=form))
+    def form_invalid(self, form: ContactForm) -> HttpResponse:
+        # Если форма невалидна, генерируем шаблон с ошибками
+        context = self.get_context_data()
+        context["form"] = form
+        return self.render_to_response(context)
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "product_detail.html"
     context_object_name = "product"
 
-    def get_context_data(self, **kwargs):
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, "Просмотр отдельного товара ограничен, т.к. вы не авторизованы.")
+        return super().handle_no_permission()
+
+    def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         # Добавляем PK категории в контекст для ссылки "Назад к категории"
         context["category_pk"] = self.object.category.pk
@@ -75,15 +95,53 @@ class ProductListByCategoryView(ListView):
         category_pk = self.kwargs["pk"]
         return Product.objects.filter(category__pk=category_pk)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         # Получаем объект категории для отображения в заголовке
         context["category"] = get_object_or_404(Category, pk=self.kwargs["pk"])
         return context
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "product_create.html"
     success_url = reverse_lazy("catalog:home")  # Перенаправление после успешного создания
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user # тут автоматически устанавливаем владельца при создании продукта
+        return super().form_valid(form)
+
+
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # lобавлено новое представление
+    model = Product
+    form_class = ProductForm
+    template_name = "product_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy("catalog:product_detail", kwargs={"pk": self.object.pk})
+
+    def test_func(self):
+        product = self.get_object()
+        return self.request.user == product.owner
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет разрешения на редактирования этого товара.")
+        return super().handle_no_permission()
+
+
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Product
+    template_name = "product_confirm_delete.html"
+    success_url = reverse_lazy("catalog:home")
+    permission_required = "catalog.delete_product"
+
+    def test_func(self):
+        product = self.get_object()
+        # Владелец или модератор (имеющий разрешение delete_product)
+        return self.request.user == product.owner or self.request.user.has_perm("catalog.delete_product")
+
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет разрешения на удаление товаров.")
+        return super().handle_no_permission()

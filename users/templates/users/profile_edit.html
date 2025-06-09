@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Добавить товар{% endblock %}
+{% block title %}Редактирование профиля{% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <h1 class="text-center mb-4">Добавить новый товар</h1>
-                <div class="card">
+                <div class="card mt-5">
+                    <div class="card-header text-center">
+                        <h3>Редактирование профиля</h3>
+                    </div>
                     <div class="card-body">
-                        <form method="post" enctype="multipart/form-data">
-                            {# Добавьте enctype="multipart/form-data" для загрузки файлов #}
+                        <form method="post" enctype="multipart/form-data"> {# Добавлен enctype для загрузки аватара #}
                             {% csrf_token %}
                             {% for field in form %}
                                 <div class="row mb-3">
@@ -27,7 +28,7 @@
                                     </div>
                                 </div>
                             {% endfor %}
-                            <button type="submit" class="btn btn-primary">Сохранить товар</button>
+                            <button type="submit" class="btn btn-primary w-100">Сохранить изменения</button>
                         </form>
                     </div>
                 </div>

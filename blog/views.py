@@ -1,40 +1,40 @@
-from django.urls import reverse_lazy
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-)
-from django.core.mail import send_mail
-from django.conf import settings
+from typing import Optional
 
-from .models import Post
+from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin  # Импортируем миксин
+from django.core.mail import send_mail
+from django.db.models import QuerySet
+from django.urls import reverse_lazy
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView)
+
 from .forms import PostForm
+from .models import Post
 
 
 class PostListView(ListView):
     model = Post
-    template_name = 'blog/post_list.html'
-    context_object_name = 'posts'
+    template_name = "blog/post_list.html"
+    context_object_name = "posts"
     queryset = Post.objects.filter(is_published=True)
 
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'blog/post_detail.html'
-    context_object_name = 'post'
-    pk_url_kwarg = 'pk'
+    template_name = "blog/post_detail.html"
+    context_object_name = "post"
+    pk_url_kwarg = "pk"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset: Optional[QuerySet["Post"]] = None) -> "Post":
         self.object = super().get_object(queryset)
         self.object.views_count += 1
         self.object.save()
 
         if self.object.views_count == 100:
             subject = f'Поздравляем! Статья "{self.object.title}" достигла 100 просмотров!'
-            # Используем self.object.pk для генерации URL
-            message = f'Ваша статья "{self.object.title}" набрала 100 просмотров.\n\nСсылка на статью: {self.request.build_absolute_uri(reverse_lazy("blog:detail", kwargs={"pk": self.object.pk}))}'
+            message = (f'Ваша статья "{self.object.title}" набрала 100 просмотров.\n\n'
+                       f'Ссылка на статью: '
+                       f'{self.request.build_absolute_uri(reverse_lazy("blog:detail", kwargs={"pk": self.object.pk}))}')
             from_email = settings.EMAIL_HOST_USER
             recipient_list = [settings.EMAIL_HOST_USER]
 
@@ -47,27 +47,26 @@ class PostDetailView(DetailView):
         return self.object
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):  # Добавляем LoginRequiredMixin
     model = Post
     form_class = PostForm
-    template_name = 'blog/post_form.html'
-    success_url = reverse_lazy('blog:list')
+    template_name = "blog/post_form.html"
+    success_url = reverse_lazy("blog:list")
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):  # Добавили LoginRequiredMixin
     model = Post
     form_class = PostForm
-    template_name = 'blog/post_form.html'
-    pk_url_kwarg = 'pk'
+    template_name = "blog/post_form.html"
+    pk_url_kwarg = "pk"
 
     def get_success_url(self):
-        # Используем self.object.pk для перенаправления
-        return reverse_lazy('blog:detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy("blog:detail", kwargs={"pk": self.object.pk})
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):  # Добавили LoginRequiredMixin
     model = Post
-    template_name = 'blog/post_confirm_delete.html'
-    success_url = reverse_lazy('blog:list')
-    context_object_name = 'post'
-    pk_url_kwarg = 'pk'
+    template_name = "blog/post_confirm_delete.html"
+    success_url = reverse_lazy("blog:list")
+    context_object_name = "post"
+    pk_url_kwarg = "pk"
