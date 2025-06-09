@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from django.conf import settings
 from .services import get_products_by_category_cached
 
 from .forms import ContactForm, ProductForm
@@ -65,7 +66,10 @@ class ContactView(FormMixin, TemplateView):
         return self.render_to_response(context)
 
 
-@method_decorator(cache_page(60 * 5, cache="default"), name='dispatch') # Кешируем страницу на 5 минут
+# Определяем таймаут кеширования в зависимости от CACHE_ENABLED
+PRODUCT_DETAIL_CACHE_TIMEOUT = 60 * 5 if settings.CACHE_ENABLED else 0
+
+@method_decorator(cache_page(PRODUCT_DETAIL_CACHE_TIMEOUT, cache="default"), name='dispatch') # Кешируем страницу на 5 минут, если CACHE_ENABLED
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "product_detail.html"
@@ -133,7 +137,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # добавлено новое представление
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "product_update.html"

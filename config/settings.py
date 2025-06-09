@@ -150,3 +150,6 @@ CACHES = {
         "TIMEOUT": 60 * 60,  # Таймаут 1 час
     }
 }
+
+# Переменная для включения/отключения кеширования
+CACHE_ENABLED = os.getenv("CACHE_ENABLED", "False") == "True"
