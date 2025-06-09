@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from .services import get_products_by_category_cached
 
 from .forms import ContactForm, ProductForm
 from .models import Category, ContactInfo, Product
@@ -62,6 +65,7 @@ class ContactView(FormMixin, TemplateView):
         return self.render_to_response(context)
 
 
+@method_decorator(cache_page(60 * 5, cache="default"), name='dispatch') # Кешируем страницу на 5 минут
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "product_detail.html"
@@ -100,6 +104,21 @@ class ProductListByCategoryView(ListView):
         # Получаем объект категории для отображения в заголовке
         context["category"] = get_object_or_404(Category, pk=self.kwargs["pk"])
         return context
+
+
+class CachedProductListByCategoryView(ListView):
+    template_name = "product_list_by_category_cached.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        category_pk = self.kwargs["pk"]
+        # Будем использовать сервисную функцию с кешированием
+        return get_products_by_category_cached(category_pk)
+
+    def get_context_data(self, **kwargs: dict) -> dict:
+        contex = super().get_context_data(**kwargs)
+        # Получаем объект категррии дял отображения в заголовке
+        contex["category"] = get_object_or_404(Category, pk=self.kwargs["pk"])
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
