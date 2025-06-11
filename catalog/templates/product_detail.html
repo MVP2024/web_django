@@ -39,10 +39,8 @@
                         <a href="{% url 'catalog:update_product' product.pk %}" class="btn btn-info mt-3 ms-2">Редактировать</a>
                     {% endif %}
                     {% if user == product.owner or user|has_perm:"catalog.delete_product" %}
-                        <form method="post" action="{% url 'catalog:delete_product' product.pk %}" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger mt-3 ms-2">Удалить</button>
-                        </form>
+                        <a href="{% url 'catalog:delete_product' product.pk %}"
+                           class="btn btn-danger mt-3 ms-2">Удалить</a>
                     {% endif %}
                 </div>
             </div>

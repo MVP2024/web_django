@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load my_tags %}
 
-{% block title %}Товары в категории "{{ category.name }}"{% endblock %}
+{% block title %}Кешированные товары в категории "{{ category.name }}"{% endblock %}
 
 {% block content %}
-    <h1 class="text-center mb-4">Товары в категории "{{ category.name }}"</h1>
+    <h1 class="text-center mb-4">Кешированные товары в категории "{{ category.name }}"</h1>
 
-    <div class="row mb-4">  {# Добавляем класс mb-5 для нижнего отступа #}
+    <div class="row mb-4">
         {% for product in products %}
-            <div class="col-sm-6 col-md-4 col-lg-3 mb-4"> {# Используем колонки для адаптивности #}
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card product-card box-shadow d-flex h-100">
                     <div class="product-img-container">
                         {% if product.image %}
@@ -41,7 +41,7 @@
         {% endfor %}
     </div>
 
-    <div class="text-center mt-2 back-button-container">  {# Можно уменьшить или оставить mt-4 #}
+    <div class="text-center mt-2 back-button-container">
         <a href="{% url 'catalog:category_list' %}" class="btn btn-secondary">Назад к категориям</a>
     </div>
 

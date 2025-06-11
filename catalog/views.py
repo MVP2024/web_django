@@ -7,6 +7,10 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.conf import settings
+from .services import get_products_by_category_cached
 
 from .forms import ContactForm, ProductForm
 from .models import Category, ContactInfo, Product
@@ -62,6 +66,10 @@ class ContactView(FormMixin, TemplateView):
         return self.render_to_response(context)
 
 
+# Определяем таймаут кеширования в зависимости от CACHE_ENABLED
+PRODUCT_DETAIL_CACHE_TIMEOUT = 60 * 5 if settings.CACHE_ENABLED else 0
+
+@method_decorator(cache_page(PRODUCT_DETAIL_CACHE_TIMEOUT, cache="default"), name='dispatch') # Кешируем страницу на 5 минут, если CACHE_ENABLED
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = "product_detail.html"
@@ -102,6 +110,22 @@ class ProductListByCategoryView(ListView):
         return context
 
 
+class CachedProductListByCategoryView(ListView):
+    template_name = "product_list_by_category_cached.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        category_pk = self.kwargs["pk"]
+        # Будем использовать сервисную функцию с кешированием
+        return get_products_by_category_cached(category_pk)
+
+    def get_context_data(self, **kwargs: dict) -> dict:
+        contex = super().get_context_data(**kwargs)
+        # Получаем объект категории дял отображения в заголовке
+        contex["category"] = get_object_or_404(Category, pk=self.kwargs["pk"])
+        return contex
+
+
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
@@ -113,7 +137,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView): # lобавлено новое представление
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "product_update.html"
