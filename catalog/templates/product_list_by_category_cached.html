@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+
+{% block title %}Кешированные товары в категории "{{ category.name }}"{% endblock %}
+
+{% block content %}
+    <h1 class="text-center mb-4">Кешированные товары в категории "{{ category.name }}"</h1>
+
+    <div class="row mb-4">
+        {% for product in products %}
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card product-card box-shadow d-flex h-100">
+                    <div class="product-img-container">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="product-img card-img-top"
+                                 alt="{{ product.name }}">
+                        {% else %}
+                            <div class="product-img-placeholder">Скоро здесь появится изображение товара</div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                        <p class="card-text"><strong>Цена:</strong> ${{ product.price }}</p>
+                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-outline-primary mt-auto">Подробнее</a>
+
+                        {# Кнопки редактирования и удаления #}
+                        {% if user == product.owner %}
+                            <a href="{% url 'catalog:update_product' product.pk %}" class="btn btn-info mt-2">Редактировать</a>
+                        {% endif %}
+                        {% if user == product.owner or user|has_perm:"catalog.delete_product" %}
+                            <a href="{% url 'catalog:delete_product' product.pk %}" class="btn btn-outline-danger mt-2">Удалить</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p>В этой категории пока нет товаров.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-2 back-button-container">
+        <a href="{% url 'catalog:category_list' %}" class="btn btn-secondary">Назад к категориям</a>
+    </div>
+
+{% endblock %}
